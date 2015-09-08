@@ -1,4 +1,4 @@
-class Aspecto
+class Aspects
 
 def self.on(*arg)
 
@@ -13,3 +13,4 @@ end
 #TRANSFORMACIONES - Se podria usar un Strategy
 #BLOQUE  - si se le pasa el contexto al bloque, los metodos tipo where, transform,etc podrian ser llamados desde Aspecto
 #WHERE - Ver si las condiciones que recibe tienen que estar definidas dentro de la clase
+#METODOS - En la clase Aspects, se deberian usar metodos de clase. Ej.: self.on
