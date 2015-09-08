@@ -1,9 +1,8 @@
 class Aspects
 
-  def self.on(*arg)
-    aspects_encontrados = find_aspects(*args)
-
-    throw(ArgumentError,"Origen Vacio") if aspects_encontrados.size==0
+  def self.on(origen, *origenes)
+    #aspects_encontrados = find_aspects(*args)
+    #throw(ArgumentError,"Origen Vacio") if aspects_encontrados.size==0
 
   end
 

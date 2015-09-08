@@ -1,20 +1,13 @@
 require 'rspec'
 require_relative '../src/Origen'
+require_relative '../src/Aspects'
 
+  describe('Aspect tests') do
 
-  describe 'origen' do
-
-    let (:un_origen){
-      Origen.new
-    }
-
-    it 'test' do
-      un_origen.decir
-
+    it 'Aspects sin origenes tira excepcion' do
+      expect(Aspects.on).to raise_error(ArgumentError)
     end
-
-
-  end
+end
 
 
 
