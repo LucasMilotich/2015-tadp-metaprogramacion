@@ -8,3 +8,11 @@ class Origen
 
 end
 
+class Aspects
+
+  def on #parametros
+
+    end
+
+end
+
