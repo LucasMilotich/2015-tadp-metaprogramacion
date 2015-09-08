@@ -1,5 +1,22 @@
 require 'rspec'
 require_relative '../src/Origen'
 
-class TestOrigen
-end
+
+
+  describe 'origen' do
+
+    let (:un_origen){
+      Origen.new
+    }
+
+    it 'test' do
+      un_origen.decir
+
+    end
+
+
+  end
+
+
+
+
