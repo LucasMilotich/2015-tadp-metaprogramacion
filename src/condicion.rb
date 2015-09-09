@@ -60,8 +60,9 @@ class NombreParametros < Condicion
     end
 end
 
-class NegCondicion
+class NegCondicion < Condicion
   def neg (condicion, *condiciones)
-
+    all_condiciones = condicion.concat(condiciones)
+    return all_condiciones.all? {|ci| self.ci == false}
   end
 end
