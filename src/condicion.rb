@@ -2,23 +2,35 @@ class Condicion
   attr_reader :metodo
 end
 
+module CondicionRegex
+  def cumple_regex?(objeto, regex)
+    regex.match(objeto).class == MatchData
+  end
+end
+
+module CondicionParametros
+  def cumplen_condicion?(block, cantidad)
+    @metodo.parameters.select &block.size == cantidad
+  end
+end
+
 class CantidadParametros < Condicion
+  include CondicionParametros
 
-  mandatory = lambda do |parametro| parametro.first == :req end
-  optional = lambda do |parametro| parametro.first == :opt end
+  mandatory = proc {|parametro| parametro.first == :req}
+  optional = proc {|parametro| parametro.first == :opt}
 
-  def has_parameters(cantidad, *tipo)
-    tipo=[] ? @metodo.parameters.size >= cantidad : @metodo.parameters.select tipo.size >= cantidad
+  def has_parameters(cantidad, tipo = proc { |p| p })
+    cumplen_condicion?(tipo,cantidad)
 
-    #puts tipo
   end
 
 end
 
-class Visibilidad
+class Visibilidad < Condicion
 
   def cumple_visibilidad?(visibilidad)
-    @metodo.owner.visibilidad(false).include?(@metodo.name)
+    @metodo.owner.method(visibilidad).call(false).include?(@metodo.name)
   end
 
   def is_private
@@ -33,3 +45,23 @@ class Visibilidad
 
 end
 
+class Selector < Condicion
+  include CondicionRegex
+  def name(regex)
+    cumple_regex?(@metodo.name,regex)
+  end
+end
+
+class NombreParametros < Condicion
+    include CondicionRegex
+    include CondicionParametros
+    def has_parameters(cantidad, regex)
+        cumplen_condicion?( proc {|parametro| cumple_regex?(parametro.last,regex)},cantidad)
+    end
+end
+
+class NegCondicion
+  def neg (condicion, *condiciones)
+
+  end
+end
