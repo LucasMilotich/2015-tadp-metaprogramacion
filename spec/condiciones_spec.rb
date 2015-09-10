@@ -110,5 +110,14 @@ describe 'test condiciones' do
     expect(foo.neg(is_private)).to be_truthy
   end
 
+  it 'metodo niega todas las condiciones (>1) y matchea' do
+    foo = NegCondicion.new(metodos_publ.last)
+    expect(foo.neg(is_private,has_parameters(1),name(/j.*/))).to be_truthy
+  end
+
+  it 'metodo no niega una condicion y no matchea' do
+    foo = NegCondicion.new(metodos_publ.last)
+    expect(foo.neg(is_private,has_parameters(2))).to be_falsey
+  end
 
 end
