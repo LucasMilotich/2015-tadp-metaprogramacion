@@ -4,22 +4,34 @@ class Aspects
 
   attr_accessor :origenes
 
+def initialize
+  @origenes = []
 
-def self.on(*origenes,&bloque)
+end
+def self.on(*origenes_argumento,&bloque)
 
-    raise ArgumentError, "Origen vacio" if origenes.size < 1
+    raise ArgumentError, "Origen vacio" if origenes_argumento.size < 1
     raise ArgumentError, "Sin bloque" if !block_given?
 
-    origenes.each do |origen|
-      if es_ER?(origen) then
-        buscar(origen)
-        #si devuelve algo != de nil, agregar a origenes
+    aspect = Aspects.new
+
+    origenes_argumento.each do |origen|
+
+      if es_ER?(origen)
+
+        buscar_y_agregar(origen,aspect)
+
+
+
       else
         if existe_clase?(origen)
-          origenes << origen
+
+          aspect.origenes << origen
 
         else if existe_modulo?(origen)
-               origenes << origen
+
+               aspect.origenes << origen
+
         end
 
 
@@ -41,29 +53,43 @@ def self.on(*origenes,&bloque)
 
 end
     class_exec(&bloque)
+  return aspect
   end
 
 def self.existe_modulo?(modulo)
-##testear
-  Required::Module.const_defined?(:modulo)
+##anda [30] pry(main)> Module.const_defined?(:Defensor)
+#  => true
+  #Required::
+
+    Module.const_defined?(:modulo)
 
 end
 
-def self.existe_clase?(class_name)
-    klass = Module.const_get(class_name)
-    return klass.is_a?(Class)
+def self.existe_clase?(klass)
+  ## Anda
+  # Module.const_get(:Aspects).is_a?(Class)
+  # => true
+
+    _local_klass = Module.const_get(:klass)
+    return _local_klass.is_a?(Class)
   rescue NameError
     return false
   end
 
 def self.es_ER?(argumento)
-   if argumento[0]=='/'
+   if argumento.class.to_s[0]=='/'
       return true
     end
     else return false;
  end
 
-def self.buscar(regex)
+def self.buscar_y_agregar(regex,instancia_aspecto)
+
+    #buscar las clases/modulos
+
+  lista_origenes = []
+  instancia_aspecto.origenes << lista_origenes # buscar como agregar una lista a una lista (append)
+
 
 end
 
