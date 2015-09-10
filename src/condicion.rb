@@ -1,8 +1,11 @@
 class Condicion
-  attr_reader :metodo
 
-  def self.new(metodo)
-    @metodo = metodo
+  attr_accessor :metodo
+
+  def self.new(m)
+    a = super()
+    a.metodo = m
+    a
   end
 
 end
@@ -15,7 +18,7 @@ end
 
 module CondicionParametros
   def cumplen_condicion?(block, cantidad)
-    @metodo.parameters.select &block.size == cantidad
+    self.metodo.parameters.select(&block).size == cantidad
   end
 end
 
@@ -39,13 +42,11 @@ class Visibilidad < Condicion
   end
 
   def is_private
-    cumple_visibilidad?(:private_instance_methods)
-    #@metodo.owner.private_instance_methods(false).include?(@metodo.name)
+    return cumple_visibilidad?(:private_instance_methods)
   end
 
   def is_public
-    cumple_visibilidad?(:public_instance_methods)
-    #@metodo.owner.public_instance_methods(false).include?(@metodo.name)
+    return cumple_visibilidad?(:public_instance_methods)
   end
 
 end
@@ -53,7 +54,7 @@ end
 class Selector < Condicion
   include CondicionRegex
   def name(regex)
-    return cumple_regex?(@metodo.name,regex)
+    cumple_regex?(@metodo.name,regex)
   end
 end
 
@@ -67,7 +68,7 @@ end
 
 class NegCondicion < Condicion
   def neg (condicion, *condiciones)
-    all_condiciones = condicion.concat(condiciones)
-    return all_condiciones.all? {|ci| self.ci == false}
+    condicion.concat(condiciones).all? {|ci| self.ci == false}
+
   end
 end
