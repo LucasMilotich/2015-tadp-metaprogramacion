@@ -1,22 +1,24 @@
-require 'test/spec'
-require '../src/condicion'
+require 'rspec'
+require_relative '../src/condicion'
 
 describe 'test condiciones' do
 
-
-  it '' do
-    class MiClase
-      def foo(p1, p2, p3, p4='a', p5='b', p6='c')
-        'Foo'
-      end
-      def bar(p1, p2='a', p3='b', p4='c')
-        'Bar'
-      end
+  class A
+    def foo(p1, p2, p4='a', p5='b', p6='c')
+      'Foo'
     end
 
-    metodos =  MiClase.new.public_methods(false).map {|m| MiClase.new.method(m)}
-
-
-
+    def bar(p1, p2='a')
+      'Bar'
+    end
   end
+
+  it 'un metodo cumple selector' do
+    metodos = A.public_instance_methods(false).map {|m| A.new.method(m)}
+    foo = Selector.new(metodos.first)
+    regex = /foo/
+
+    expect(foo.name(regex)).to be_truthy
+  end
+
 end
