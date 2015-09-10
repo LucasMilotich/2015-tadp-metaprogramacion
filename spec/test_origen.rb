@@ -1,5 +1,4 @@
 require 'rspec'
-require_relative '../src/Origen'
 require_relative '../src/Aspects'
 
   describe('Aspect tests') do

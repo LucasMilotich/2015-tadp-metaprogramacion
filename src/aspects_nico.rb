@@ -1,10 +1,17 @@
 $LOAD_PATH << '.'   #Usamos esto o require_relative
 require "origins"
+require 'pry'
 
 class AspectsNico
   include Origins
+
   def self.on(*origins,&bloque)
-  find_origins(*origins)
+
+    raise ArgumentError, "Origen vacio" if origins.empty?
+    raise ArgumentError, "Sin bloque" if !block_given?
+
+    find_origins(*origins)
+
   end
 
   def self.resolve_regex(regex)
@@ -21,7 +28,6 @@ class AspectsNico
     origins
   end
 
-
 end
 
 class Prueba
@@ -30,6 +36,6 @@ class Prueba
   attr_reader :perro_lectura
   attr_writer :perro_escritura
   def test
-    resolve_regex("a")
+    "probando"
   end
 end
