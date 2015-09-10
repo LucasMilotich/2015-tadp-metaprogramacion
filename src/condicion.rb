@@ -1,5 +1,10 @@
 class Condicion
   attr_reader :metodo
+
+  def self.new(metodo)
+    @metodo = metodo
+  end
+
 end
 
 module CondicionRegex
@@ -48,7 +53,7 @@ end
 class Selector < Condicion
   include CondicionRegex
   def name(regex)
-    cumple_regex?(@metodo.name,regex)
+    return cumple_regex?(@metodo.name,regex)
   end
 end
 
