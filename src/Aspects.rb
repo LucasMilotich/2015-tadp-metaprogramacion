@@ -4,11 +4,11 @@ class Aspects
 
   attr_accessor :origenes
 
-def initialize
-  @origenes = []
+  def initialize
+    @origenes = []
 
-end
-def self.on(*origenes_argumento,&bloque)
+  end
+  def self.on(*origenes_argumento,&bloque)
 
     raise ArgumentError, "Origen vacio" if origenes_argumento.size < 1
     raise ArgumentError, "Sin bloque" if !block_given?
@@ -32,43 +32,43 @@ def self.on(*origenes_argumento,&bloque)
 
                aspect.origenes << origen
 
+             end
+
+
         end
-
-
       end
+
+
+
+
+
+      #a = Aspects.new
+      #a.instance_eval(&bloque)
+
+
+
+
+      #a.class_eval
+
+
     end
-
-
-
-
-
-    #a = Aspects.new
-    #a.instance_eval(&bloque)
-
-
-
-
-    #a.class_eval
-
-
-end
     class_exec(&bloque)
-  return aspect
+    return aspect
   end
 
-def self.existe_modulo?(modulo)
+  def self.existe_modulo?(modulo)
 ##anda [30] pry(main)> Module.const_defined?(:Defensor)
 #  => true
-  #Required::
+#Required::
 
     Module.const_defined?(:modulo)
 
-end
+  end
 
-def self.existe_clase?(klass)
-  ## Anda
-  # Module.const_get(:Aspects).is_a?(Class)
-  # => true
+  def self.existe_clase?(klass)
+    ## Anda
+    # Module.const_get(:Aspects).is_a?(Class)
+    # => true
 
     _local_klass = Module.const_get(:klass)
     return _local_klass.is_a?(Class)
@@ -76,28 +76,28 @@ def self.existe_clase?(klass)
     return false
   end
 
-def self.es_ER?(argumento)
-   if argumento.class.to_s[0]=='/'
+  def self.es_ER?(argumento)
+    if argumento.class.to_s[0]=='/'
       return true
     end
-    else return false;
- end
+  else return false;
+  end
 
-def self.buscar_y_agregar(regex,instancia_aspecto)
+  def self.buscar_y_agregar(regex,instancia_aspecto)
 
     #buscar las clases/modulos
 
-  lista_origenes = []
-  instancia_aspecto.origenes << lista_origenes # buscar como agregar una lista a una lista (append)
+    lista_origenes = []
+    instancia_aspecto.origenes << lista_origenes # buscar como agregar una lista a una lista (append)
 
 
-end
+  end
 
-def self.find_aspects(*args)
+  def self.find_aspects(*args)
 
-  return 1
+    return 1
 
-end
+  end
 
 
 
