@@ -2,7 +2,7 @@ require_relative 'condicion.rb'
 require_relative 'Aspects.rb'
 
 class Origen
-  include Condicion
+  include Condiciones
   attr_accessor :origen
 
   def self.new(un_argumento)
@@ -19,16 +19,13 @@ class Origen
     #si es objeto, todos sus metodos
     #si es modulo, todos los metodos de instancia
     #si es clase, todos los metodos de instancia
-
-    lista = []
-    if @origen.is_a?(Class) || @origen.is_a?(Module)
-      lista = @origen.private_instance_methods(false).concat(@origen.instance_methods(false))
-
-      return lista.map {|s| @origen.new.method(s)}
+    listaobjetos = []
+    if @origen.class.is_a?(Class) || @origen.class.is_a?(Module)
+      listaobjetos = ObjectSpace.each_object(@origen).to_a
     else
-      lista = @origen.private_methods(false).concat(@origen.methods(false))
-      return lista.map{|s| @origen.method(s)}
+      listaobjetos = [@origen]
     end
+    listaobjetos.map {|obj| obj.private_methods(false).concat(@origen.methods(false)).map {|simbolo| obj.method(simbolo)}}
   end
 
   def existe_en_lista?(lista_origenes)

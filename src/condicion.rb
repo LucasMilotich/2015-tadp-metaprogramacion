@@ -6,7 +6,7 @@ end
 
 module CondicionParametros
   def cumplen_condicion?(block, cantidad)
-    self.metodo.parameters.select(&block).size == cantidad
+    @metodo.parameters.select(&block).size == cantidad
   end
 end
 
@@ -61,15 +61,15 @@ module NegCondicion
 
 end
 
-module Condicion
+module Condiciones
+  attr_accessor :metodo
+
   include Visibilidad
   include NombreParametros
   alias_method :has_parameters_n, :has_parameters
   include CantidadParametros
   include Selector
   include NegCondicion
-
-  attr_accessor :metodo
 
   def has_parameters(cantidad, arg = proc { |p| p } )
     if arg.is_a?(Regexp) then

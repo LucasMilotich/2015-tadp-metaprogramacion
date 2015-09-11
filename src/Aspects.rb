@@ -3,44 +3,33 @@ require_relative 'origen.rb'
 class Aspects
 
   def self.on(origen_arg,*origenes_argumento,&bloque)
-    _argumentos = []
-    _argumentos << origen_arg
-    _argumentos << origenes_argumento
-
+    _argumentos = [origen_arg].concat(origenes_argumento)
     origenes_posta = []
 
     raise ArgumentError, "Sin bloque" if !block_given?
 
     _argumentos.each do |argumento|
-      puts argumento
       if es_ER?(argumento)
         buscar_y_agregar(argumento, origenes_posta)
       else
         if existe_tipo?(argumento, Module) || existe_tipo?(argumento, Object) || existe_tipo?(argumento,Class)
           origenes_posta << Origen.new(argumento)
         end
-        #if aspect.existe_clase?(argumento)
-        #  aspect.origenes << argumento
-        #else if aspect.existe_modulo?(argumento)
-        #       aspect.origenes << argumento
-        #     end
-        #end
       end
     end
 
     raise ArgumentError, "Origen vacio" if origenes_posta.empty?
 
-    origenes_posta.each do
-      |origen| origen.instance_eval(&bloque)
+    origenes_posta.each do |origen|
+      puts origen
+      origen.instance_eval &bloque
     end
-    #class_exec(&bloque)
-    #return aspect
   end
 
   def self.existe_tipo?(argumento, tipo)
     ObjectSpace.each_object(tipo).to_a.include?(argumento)
-  rescue
-    false
+  rescue NameError
+    return false
   end
 
   def self.es_ER?(argumento)
@@ -49,7 +38,7 @@ class Aspects
 
   def self.buscar_y_agregar(regex, lista_origenes)
      _lista = Object.constants.grep(regex).map {|regex_symbol| Object.const_get(regex_symbol)}
-     if !lista.empty?
+     if !_lista.empty?
        _lista.each do |object|
          lista_origenes << Origen.new(object)
        end
@@ -58,7 +47,6 @@ class Aspects
 
   ###########################################################
   def self.where(condiciones)
-
     _listaSym = []
     _listaMetodos = []
 
