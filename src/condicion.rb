@@ -85,4 +85,8 @@ class Condicion
     end
   end
 
+  def validar(*condiciones)
+    condiciones.all? {|ci| ci}
+  end
+
 end
