@@ -121,4 +121,8 @@ describe 'test condiciones' do
     expect(bar.negar_falso).to be_falsey
   end
 
+  #varios
+  it 'metodo evalua varias condiciones que cumple' do
+    expect(foo.validar(is_public,has_parameters(6))).to be_truthy
+  end
 end
