@@ -61,7 +61,7 @@ module NegCondicion
 
 end
 
-class Condicion
+module Condicion
   include Visibilidad
   include NombreParametros
   alias_method :has_parameters_n, :has_parameters
@@ -71,12 +71,6 @@ class Condicion
 
   attr_accessor :metodo
 
-  def self.new(m)
-    a = super()
-    a.metodo = m
-    a
-  end
-
   def has_parameters(cantidad, arg = proc { |p| p } )
     if arg.is_a?(Regexp) then
       has_parameters_n(cantidad, arg)
@@ -85,7 +79,8 @@ class Condicion
     end
   end
 
-  def validar(*condiciones)
+  def validar(metodo_a_analizar,*condiciones)
+    @metodo = metodo_a_analizar
     condiciones.all? {|ci| ci}
   end
 
