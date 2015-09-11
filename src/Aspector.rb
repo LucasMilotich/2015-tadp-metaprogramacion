@@ -14,7 +14,7 @@ class Aspector
 
   def find_methods(*origins)
     all_methods= []
-    @origins.each { |an_origin| an_origin.is_a?(Class) ? "hola" : "holis, no entre"}
+    @origins.each { |an_origin| an_origin.is_a?(Class) ? all_methods<< an_origin.methods(false) : all_methods<< an_origin.class.instance_methods(false)}
     all_methods
   end
 
