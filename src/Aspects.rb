@@ -1,3 +1,4 @@
+include 'condicion.rb'
 
 class Aspects
 
@@ -21,9 +22,8 @@ class Aspects
 
         buscar_y_agregar(origen,aspect)
 
-
-
       else
+
         if existe_clase?(origen)
 
           aspect.origenes << origen
@@ -31,37 +31,23 @@ class Aspects
         else if existe_modulo?(origen)
 
                aspect.origenes << origen
-
              end
-
-
         end
       end
 
-
-
-
-
-      #a = Aspects.new
-      #a.instance_eval(&bloque)
-
-
-
-
-      #a.class_eval
-
-
     end
+
     class_exec(&bloque)
+
     return aspect
   end
 
+
+
+
   def self.existe_modulo?(modulo)
 ##anda [30] pry(main)> Module.const_defined?(:Defensor)
-#  => true
-#Required::
-
-    Module.const_defined?(:modulo)
+   Module.const_defined?(modulo.to_s)
 
   end
 
@@ -70,36 +56,46 @@ class Aspects
     # Module.const_get(:Aspects).is_a?(Class)
     # => true
 
-    _local_klass = Module.const_get(:klass)
-    return _local_klass.is_a?(Class)
-  rescue NameError
-    return false
+   Object.const_get(klass.to_s).is_a?(Class)
+
+
   end
 
   def self.es_ER?(argumento)
-    if argumento.class.to_s[0]=='/'
-      return true
-    end
-  else return false;
+    argumento.is_a?(Regexp)
   end
 
   def self.buscar_y_agregar(regex,instancia_aspecto)
-
-    #buscar las clases/modulos
-
-    lista_origenes = []
-    instancia_aspecto.origenes << lista_origenes # buscar como agregar una lista a una lista (append)
-
+     _lista = Object.constants.grep(regex).map {|regex_symbol| Object.const_get(regex_symbol)}
+     _lista.each do |object|
+      instancia_aspecto.origenes << object
+     end
 
   end
 
   def self.find_aspects(*args)
-
     return 1
-
   end
 
+  def self.where(condiciones)
 
+    _listaSym = []
+    _listaMetodos = []
+
+    @origenes.each do |origen|
+
+      _listSym = origen.private_instance_methods(false).concat(origen.instance_methods(false))
+
+      _listaSym.each do |sym|
+      _listaMetodos <<  origen.new.method(sym)
+
+      end
+
+    end
+
+    return _listaMetodos.select {|met| Condicion.new(met).validar(condiciones)}
+
+  end
 
 end
 
