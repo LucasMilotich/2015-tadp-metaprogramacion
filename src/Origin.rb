@@ -24,7 +24,7 @@ class Origin < Condition
   end
 
   def transform (*methods_to_transform,&block)
-    methods_filtered=self.where(*conditions) # Hago q explote para ver la salida en el test
+    methods_filtered=self.where(*methods_to_transform) # Hago q explote para ver la salida en el test
     transformer = Transformer.new
     transformer.instance_exec(&block)
     #TODO no anda con varios transformers

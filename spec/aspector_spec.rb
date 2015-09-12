@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative '../src/aspects_nico'
+require_relative '../src/Aspects'
 
 describe 'Aspects_test' do
   let (:prueba){
@@ -12,9 +12,8 @@ describe 'Aspects_test' do
     Origin.new
   }
 
-
   it 'bleh' do
-  AspectsNico.on Prueba.new do transform (where name(/perro/), name(/.le*/)) do inject (1) end end
+    Aspects.on Prueba.new do transform (where name(/perro/), name(/.le*/)) do inject (1) end end
     expect(array.length).to eq(0)
   end
 end
