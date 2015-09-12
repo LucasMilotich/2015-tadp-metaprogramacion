@@ -13,24 +13,16 @@ class Origen
 
   def where (*condiciones)
     metodos.select {|met| validar(met,condiciones)}
-
   end
 
   def metodos
-    #si es objeto, todos sus metodos
-    #si es modulo, todos los metodos de instancia
-    #si es clase, todos los metodos de instancia
-    listaobjetos = []
-    if @origen.class.is_a?(Class) || @origen.class.is_a?(Module)
-      listaobjetos = ObjectSpace.each_object(@origen).to_a
-    else
-      listaobjetos = [@origen]
-    end
-    listaobjetos.map {|obj| obj.private_methods(false).concat(@origen.methods(false)).map {|simbolo| obj.method(simbolo)}}
+    lista_metodos = nil
+    (@origen.instance_of?(Class) || @origen.instance_of?(Module)) ?
+        lista_metodos = @origen :  lista_metodos = @origen.singleton_class
+    lista_metodos.private_instance_methods(false).concat(lista_metodos.public_instance_methods(false)).map {|simbolo| lista_metodos.method(simbolo)}
   end
 
   def existe_en_lista?(lista_origenes)
     lista_origenes.any? { |org| org.origen.class == self.class }
   end
-
 end

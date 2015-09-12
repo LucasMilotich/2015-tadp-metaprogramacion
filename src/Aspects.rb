@@ -12,7 +12,7 @@ class Aspects
       if es_ER?(argumento)
         buscar_y_agregar(argumento, origenes_posta)
       else
-        if existe_tipo?(argumento, Module) || existe_tipo?(argumento, Object) || existe_tipo?(argumento,Class)
+        if argumento.instance_of?(Module) || argumento.instance_of?(Object) || argumento.instance_of?(Class)
           origenes_posta << Origen.new(argumento)
         end
       end
@@ -23,12 +23,6 @@ class Aspects
     origenes_posta.each do |origen|
       origen.instance_eval &bloque
     end
-  end
-
-  def self.existe_tipo?(argumento, tipo)
-    ObjectSpace.each_object(tipo).to_a.include?(argumento)
-  rescue NameError
-    return false
   end
 
   def self.es_ER?(argumento)
@@ -43,31 +37,5 @@ class Aspects
        end
      end
   end
-
-  ###########################################################
-  def existe_modulo?(modulo)
-##anda [30] pry(main)> Module.const_defined?(:Defensor)
-    Module.const_defined?(modulo.to_s)
-
-  end
-
-  def existe_clase?(klass)
-    ## Anda
-    # Module.const_get(:Aspects).is_a?(Class)
-    # => true
-
-    begin
-
-      Object.const_get(klass.to_s).is_a?(Class)
-    rescue
-      Object.const_get(klass.class.to_s).is_a?(Class)
-    end
-
-  end
-
-  def find_aspects(*args)
-    return 1
-  end
-############################################################
 
 end

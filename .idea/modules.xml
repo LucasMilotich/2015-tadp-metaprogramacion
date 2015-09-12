@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/2015-tadp-metaprogramacion.iml" filepath="$PROJECT_DIR$/.idea/2015-tadp-metaprogramacion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../tadp-2015c2-metabuilder-clase/.idea/tadp-2015c2-metabuilder-clase.iml" filepath="$PROJECT_DIR$/../tadp-2015c2-metabuilder-clase/.idea/tadp-2015c2-metabuilder-clase.iml" />
     </modules>
   </component>
 </project>
