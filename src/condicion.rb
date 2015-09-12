@@ -5,22 +5,22 @@ module CondicionRegex
 end
 
 module CondicionParametros
-  def cumplen_condicion?(block, cantidad)
-    @metodo.parameters.select(&block).size == cantidad
+  def cumplen_parametros?(block, cantidad)
+    parameters.select(&block).size == cantidad
   end
 end
 
 module Visibilidad
-  def cumple_visibilidad?(visibilidad)
-    @metodo.owner.method(visibilidad).call(false).include?(@metodo.name)
+  def cumple_visibilidad?(visibilidad, quien)
+    owner.method(visibilidad).call(false).include?(quien)
   end
 
   def is_private
-    return cumple_visibilidad?(:private_instance_methods)
+    proc {|un_metodo| un_metodo.cumple_visibilidad?(:private_instance_methods, un_metodo)}
   end
 
   def is_public
-    return cumple_visibilidad?(:public_instance_methods)
+    proc {|un_metodo| un_metodo.cumple_visibilidad?(:public_instance_methods, un_metodo)}
   end
 
 end
@@ -28,12 +28,15 @@ end
 module CantidadParametros
   include CondicionParametros
 
-  mandatory = proc {|parametro| parametro.first == :req}
-  optional = proc {|parametro| parametro.first == :opt}
+  def mandatory
+    proc {|parametro| parametro.first == :req}
+  end
+  def optional
+    proc {|parametro| parametro.first == :opt}
+  end
 
   def has_parameters(cantidad, tipo = proc { |p| p })
-    cumplen_condicion?(tipo,cantidad)
-
+    proc{|un_metodo| un_metodo.cumplen_parametros?(tipo,cantidad)}
   end
 
 end
@@ -41,7 +44,7 @@ end
 module Selector
   include CondicionRegex
   def name(regex)
-    cumple_regex?(@metodo.name,regex)
+    proc{|un_metodo| cumple_regex?(un_metodo.name,regex)}
   end
 end
 
@@ -49,14 +52,15 @@ module NombreParametros
   include CondicionRegex
   include CondicionParametros
   def has_parameters(cantidad, regex)
-    cumplen_condicion?( proc {|parametro| cumple_regex?(parametro.last,regex)},cantidad)
+    proc {|un_metodo| un_metodo.cumplen_parametros?
+    ( proc{|parametro| cumple_regex?(parametro.last,regex)},cantidad)}
   end
 end
 
 module NegCondicion
 
   def neg (*condiciones)
-    condiciones.all? {|ci| ci == false}
+    proc {|un_met| condiciones.all? {|cond| not(cond.call(un_met))}}
   end
 
 end
@@ -72,16 +76,17 @@ module Condiciones
   include NegCondicion
 
   def has_parameters(cantidad, arg = proc { |p| p } )
+
     if arg.is_a?(Regexp) then
-      has_parameters_n(cantidad, arg)
+      _pro = has_parameters_n(cantidad, arg)
     else
-      super(cantidad,arg)
+      _pro = super(cantidad,arg)
     end
+    _pro
   end
 
   def validar(metodo_a_analizar,*condiciones)
-    @metodo = metodo_a_analizar
-    condiciones.all? {|ci| ci}
+    condiciones.all? {|cond| cond.call(metodo_a_analizar)}
   end
 
 end

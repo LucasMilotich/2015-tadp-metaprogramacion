@@ -13,6 +13,7 @@ class Origen
 
   def where (*condiciones)
     @origen.metodos.select {|met| validar(met,condiciones)}
+
   end
 
   def metodos

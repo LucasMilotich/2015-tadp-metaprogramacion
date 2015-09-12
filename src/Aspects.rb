@@ -46,30 +46,6 @@ class Aspects
   end
 
   ###########################################################
-  def self.where(condiciones)
-    _listaSym = []
-    _listaMetodos = []
-
-    @origenes.each do |origen|
-
-      if origen.is_a?(Class)
-        #es una clase
-
-        _listSym = origen.private_instance_methods(false).concat(origen.instance_methods(false))
-        _listaSym.each do |sym|
-        _listaMetodos <<  origen.new.method(sym)
-        end
-      else
-      #Es una instancia
-        _listSym = origen.private_methods(false).concat(origen.methods(false))
-        _listaSym.each do |sym|
-        _listaMetodos <<  origen.new.method(sym)
-      end
-    end
-   end
-    return _listaMetodos.select {|met| Condicion.new(met).validar(condiciones)}
-  end
-
   def existe_modulo?(modulo)
 ##anda [30] pry(main)> Module.const_defined?(:Defensor)
     Module.const_defined?(modulo.to_s)
