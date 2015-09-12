@@ -43,8 +43,10 @@ end
 
 module Selector
   include CondicionRegex
+
   def name(regex)
-    proc{|un_metodo| cumple_regex?(un_metodo.name,regex)}
+    #proc{|un_metodo| cumple_regex?(un_metodo.name,regex)}
+    proc{|un_metodo| regex.match(un_metodo.name).is_a?(MatchData)}
   end
 end
 
@@ -52,8 +54,7 @@ module NombreParametros
   include CondicionRegex
   include CondicionParametros
   def has_parameters(cantidad, regex)
-    proc {|un_metodo| un_metodo.cumplen_parametros?
-    ( proc{|parametro| cumple_regex?(parametro.last,regex)},cantidad)}
+    proc {|un_metodo| un_metodo.cumplen_parametros?(proc{|parametro| cumple_regex?(parametro.last,regex)},cantidad)}
   end
 end
 
