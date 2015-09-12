@@ -7,7 +7,6 @@ describe 'Aspects_test' do
   }
 
   it 'Guardar tantos elemtos como origenes puse' do
-
     a = Aspects.on una_clase,Object,Module do "test" end
     expect(a.origenes.size).to eq(3)
   end

@@ -1,17 +1,14 @@
-module CondicionRegex
-  def cumple_regex?(objeto, regex)
-    regex.match(objeto).is_a?(MatchData)
-  end
-end
+class Condition
 
-module CondicionParametros
-  def cumplen_condicion?(block, cantidad)
+  def name(regex)
+   proc {|metodo| regex.match(metodo).is_a?(MatchData)}
+  end
+
+  def cumplen_condicion(block, cantidad)
     self.metodo.parameters.select(&block).size == cantidad
   end
-end
 
-module Visibilidad
-  def cumple_visibilidad?(visibilidad)
+  def cumplen_condicion?(visibilidad)
     @metodo.owner.method(visibilidad).call(false).include?(@metodo.name)
   end
 
@@ -24,6 +21,11 @@ module Visibilidad
   end
 
 end
+
+
+
+
+=begin
 
 module CantidadParametros
   include CondicionParametros
@@ -90,3 +92,4 @@ class Condicion
   end
 
 end
+=end

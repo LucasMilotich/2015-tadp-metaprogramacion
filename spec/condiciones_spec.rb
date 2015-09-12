@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative '../src/condicion'
+require_relative '../src/Condition'
 
 describe 'test condiciones' do
 
@@ -93,7 +93,7 @@ describe 'test condiciones' do
   end
 
   #Neg
-  #Se extiende a la clase Condicion para que las funciones llamadas dentro de neg estén dentro de su contexto.
+  #Se extiende a la clase Condicion para que las funciones llamadas dentro de neg estï¿½n dentro de su contexto.
   module Funciones_para_negar
     def negar_private
         self.neg(is_private)
