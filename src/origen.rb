@@ -1,5 +1,6 @@
 require_relative 'condicion.rb'
 require_relative 'Aspects.rb'
+require_relative 'transformacion.rb'
 
 class Origen
   include Condiciones
@@ -32,12 +33,17 @@ class Origen
   def transform (*lista_metodos, &bloque)
     lista_metodos.each do |un_metodo|
       self.metodo_a_transformar = un_metodo
+      puts metodo_a_transformar
       self.instance_eval &bloque
     end
   end
 
   def clase_origen
-    (@origen.is_a?(Class) or @origen.is_a?(Module)) ? return @origen : return @origen.singleton_class
+    if (@origen.is_a?(Class) or @origen.is_a?(Module))
+      return @origen
+    else
+      return @origen.singleton_class
+    end
   end
 
 end

@@ -5,7 +5,7 @@ module Transformaciones
   end
 
   def redirect_to(objetonuevo)
-    proc{|el_metodo, *args| el_metodo.owner.define_method(el_metodo.name) do objetonuevo.method(el_metodo.name).call(args) end}
+    clase_origen.send(:define_method, @metodo_a_transformar.name)do objetonuevo.method(el_metodo.name).call(args) end
   end
 
   def before (&bloque)
@@ -17,7 +17,7 @@ module Transformaciones
   end
 
   def instead_of (&bloque)
-
+    clase_origen.send(:define_method, @metodo_a_transformar.name, bloque)
   end
 
 end
