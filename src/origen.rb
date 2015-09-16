@@ -16,13 +16,19 @@ class Origen
   end
 
   def metodos
-    lista_metodos = nil
-    (@origen.instance_of?(Class) || @origen.instance_of?(Module)) ?
-        lista_metodos = @origen :  lista_metodos = @origen.singleton_class
-    lista_metodos.private_instance_methods(false).concat(lista_metodos.public_instance_methods(false)).map {|simbolo| lista_metodos.method(simbolo)}
+    if @origen.is_a?(Class) or @origen.is_a?(Module)
+      return (@origen.public_instance_methods(false) + @origen.private_instance_methods(false)).map {|simbolo| @origen.instance_method(simbolo)}
+    else
+      return (@origen.public_methods(false) + @origen.private_methods(false)).map {|simbolo| @origen.method(simbolo)}
+    end
   end
 
   def existe_en_lista?(lista_origenes)
     lista_origenes.any? { |org| org.origen.class == self.class }
   end
+
+  def transform (*lista_metodos)
+
+  end
+
 end

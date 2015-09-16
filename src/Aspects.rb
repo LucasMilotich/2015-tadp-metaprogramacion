@@ -21,7 +21,7 @@ class Aspects
     raise ArgumentError, "Origen vacio" if origenes_posta.empty?
 
     origenes_posta.each do |origen|
-      origen.instance_eval &bloque
+      origen.instance_eval(&bloque)
     end
   end
 
@@ -37,5 +37,7 @@ class Aspects
        end
      end
   end
+
+
 
 end
