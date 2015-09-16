@@ -1,4 +1,5 @@
-require_relative 'Aspector.rb'
+require_relative 'Aspects.rb'
+require_relative 'Origin'
 class Aspects
 
   def initialize

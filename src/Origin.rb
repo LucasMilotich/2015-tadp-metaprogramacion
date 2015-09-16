@@ -18,7 +18,7 @@ class Origin < Condition
     bla= @_methods.select {
         |metodo| conditions.all? {|condition| condition.call(metodo)}
     }
-    aspector = Aspector.new
+    aspector = Aspects.new
     bla
 #    aspector.instance_exec(&block)
   end

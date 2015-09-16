@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative '../src/aspects_nico'
+require_relative '../src/Aspects'
 
 describe 'Origins' do
   let (:prueba){
