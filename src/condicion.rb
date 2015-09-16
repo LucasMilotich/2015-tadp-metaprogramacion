@@ -60,7 +60,7 @@ end
 
 module NegCondicion
 
-  def neg (condiciones)
+  def neg (*condiciones)
     proc {|un_met| condiciones.all? {|cond| not(cond.call(un_met))}}
   end
 

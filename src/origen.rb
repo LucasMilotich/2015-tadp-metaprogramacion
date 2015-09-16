@@ -30,5 +30,5 @@ class Origen
   def transform (*lista_metodos)
 
   end
-
+  
 end
