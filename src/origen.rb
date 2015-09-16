@@ -3,7 +3,9 @@ require_relative 'Aspects.rb'
 
 class Origen
   include Condiciones
+  include Transformaciones
   attr_accessor :origen
+  attr_accessor :metodo_a_transformar
 
   def self.new(un_argumento)
     o = super()
@@ -27,8 +29,15 @@ class Origen
     lista_origenes.any? { |org| org.origen.class == self.class }
   end
 
-  def transform (*lista_metodos)
-
+  def transform (*lista_metodos, &bloque)
+    lista_metodos.each do |un_metodo|
+      self.metodo_a_transformar = un_metodo
+      self.instance_eval &bloque
+    end
   end
-  
+
+  def clase_origen
+    (@origen.is_a?(Class) or @origen.is_a?(Module)) ? return @origen : return @origen.singleton_class
+  end
+
 end
