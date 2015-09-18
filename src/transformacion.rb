@@ -8,7 +8,7 @@ class Transformacion
   end
 
   def modificar(&bloque)
-    clase_metodo.send(:define_method, self.metodo.name, bloque)
+    clase_metodo.send(:define_method, self.metodo.name, &bloque)
   end
 
 
@@ -17,18 +17,24 @@ class Transformacion
   end
 
   def redirect_to(objetonuevo)
+    nuevo = objetonuevo.method(self.metodo.name)
     modificar do
-    |*args| objetonuevo.method(metodo.name).call(args)
+    |args| nuevo.call(args)
     end
   end
 
   def before (&bloque)
-
+    siguiente = self.metodo.name
+    modificar do |args|
+      bloque
+      self.method(siguiente).call(args)
+    end
   end
 
   def after (&bloque)
-    modificar do
-      self.method(self.metodo.name).call(args)
+    anterior = self.metodo.name
+    modificar do |args|
+      self.method(anterior).call(args)
       bloque
     end
   end

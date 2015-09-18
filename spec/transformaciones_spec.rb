@@ -38,28 +38,82 @@ describe 'Transformaciones' do
     end
   end
 
-  it 'redirect_to' do
-    obj_cl2 = CL2.new()
-    saludar_cl2 = obj_cl2.method(:saludar)
-    t = Transformacion.new(saludar_cl2)
-    t.redirect_to(CL3.new)
-    expect(obj_cl2.saludar("Gil")).to eq("Chau Gil")
+  #En todos los tests se evalúa con dos objetos generados por la misma clase.
+  #En unos se verifican que el cambio se aplique en ambos, y en otros en uno solo.
+
+  it 'redirect_to en objeto' do
+    un_objeto = CL2.new
+    otro_objeto = CL2.new
+    saludar_obj1 = un_objeto.method(:saludar)
+    Transformacion.new(saludar_obj1).redirect_to(CL3.new)
+    expect(un_objeto.saludar("Gil")).to eq("Chau Gil")
+    expect(otro_objeto.saludar("Gil")).to eq("Hola Gil")
   end
 
-  it 'instead of con objeto' do
-    obj_cl4 = CL4.new
-    m3_cl4 = obj_cl4.method(:m3)
+  it 'redirect_to en clase' do
+    saludar_cl2 = CL2.instance_method(:saludar)
+    Transformacion.new(saludar_cl2).redirect_to(CL3.new)
+    un_objeto = CL2.new
+    otro_objeto = CL2.new
+    expect(un_objeto.saludar("Gil")).to eq("Chau Gil")
+    expect(otro_objeto.saludar("Gil")).to eq("Chau Gil")
+  end
+
+  it 'instead of en objeto' do
+    un_objeto = CL4.new
+    otro_objeto = CL4.new
+    m3_cl4 = un_objeto.method(:m3)
     Transformacion.new(m3_cl4).instead_of do
       |instance, *args| @x = 123
     end
-    expect(obj_cl4.m3(10)).to eq(123)
+    expect(un_objeto.m3(10)).to eq(123)
+    expect(otro_objeto.m3(10)).to eq(10)
   end
 
   it 'instead of con clase' do
     m3_cl4 = CL4.instance_method(:m3)
     Transformacion.new(m3_cl4).instead_of do
-      |instance, *args| @x = 123
+    |instance, *args| @x = 123
     end
-    expect(CL4.new.m3(10)).to eq(123)
+    un_objeto = CL4.new
+    otro_objeto = CL4.new
+    expect(un_objeto.m3(10)).to eq(123)
+    expect(otro_objeto.m3(10)).to eq(123)
   end
+
+  it 'before en clase' do
+    m1_cl4 = CL4.instance_method :m1
+    Transformacion.new(m1_cl4).before do |instance, cont, *args|
+      @x = 10
+      new_args = args.map{ |arg| arg * 10 }
+      cont.call(self, nil, *new_args)
+    end
+    un_obj = CL4.new
+    otro_obj = CL4.new
+    expect(un_obj.m1(1,2)).to eq(30)
+    expect(otro_obj.m1(1,2)).to eq(30)
+  end
+
+  it 'after en clase' do
+    un_obj = CL4.new
+
+    m2_cl4 = CL4.instance_method(:m2)
+    Transformacion.new(m2_cl4).after do |instance, *args|
+      if @x > 100
+        2 * @x
+      else
+        @x
+      end
+    end
+
+    expect(un_obj.m2(10)).to eq(10)
+    expect(un_obj.m2(200)).to eq(400)
+
+    otro_obj = CL4.new
+    expect(otro_obj.m2(10)).to eq(10)
+    expect(otro_obj.m2(200)).to eq(400)
+  end
+
+
+
 end
