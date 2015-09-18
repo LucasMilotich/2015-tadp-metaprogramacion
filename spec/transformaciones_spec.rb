@@ -1,5 +1,4 @@
 require 'rspec'
-require_relative '../src/origen'
 require_relative '../src/transformacion'
 
 describe 'Transformaciones' do
@@ -39,16 +38,13 @@ describe 'Transformaciones' do
     end
   end
 
-  it 'instead' do
-    og = Origen.new(CL4)
-    procname = og.name (/m3/)
-    og.transform(og.where procname) do
-      instead_of do |instance, *args|
-        @x = 123
-      end
-    end
-    instancia = CL4.new
-    instancia.m3(10)
-    expect(instancia.x).to eq 123
+  it 'redirect_to' do
+    obj_cl2 = CL2.new()
+    saludar_cl2 = obj_cl2.method(:saludar)
+    t = Transformacion.new(saludar_cl2)
+    t.redirect_to(CL3.new)
+    expect(obj_cl2.saludar("Gil")).to eq("Chau Gil")
   end
+
+
 end

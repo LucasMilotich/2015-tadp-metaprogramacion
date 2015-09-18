@@ -1,11 +1,25 @@
-module Transformaciones
+class Transformacion
+  attr_accessor :metodo
+
+  def self.new(un_metodo)
+    s = super()
+    s.metodo = un_metodo
+    return s
+  end
+
+  def modificar(&bloque)
+    clase_metodo.send(:define_method, self.metodo.name, bloque)
+  end
+
 
   def inject(&bloque)
 
   end
 
   def redirect_to(objetonuevo)
-    clase_origen.send(:define_method, @metodo_a_transformar.name)do objetonuevo.method(el_metodo.name).call(args) end
+    modificar do
+      |*args| objetonuevo.method(@metodo.name).call(args)
+    end
   end
 
   def before (&bloque)
@@ -17,7 +31,17 @@ module Transformaciones
   end
 
   def instead_of (&bloque)
-    clase_origen.send(:define_method, @metodo_a_transformar.name, bloque)
+    modificar do
+      bloque
+    end
+  end
+
+  def clase_metodo
+    if metodo.is_a?(Method)
+      return metodo.receiver.singleton_class
+    else
+      return metodo.owner
+    end
   end
 
 end

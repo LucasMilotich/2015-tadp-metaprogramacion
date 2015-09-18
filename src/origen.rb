@@ -4,9 +4,7 @@ require_relative 'transformacion.rb'
 
 class Origen
   include Condiciones
-  include Transformaciones
   attr_accessor :origen
-  attr_accessor :metodo_a_transformar
 
   def self.new(un_argumento)
     o = super()
@@ -32,17 +30,7 @@ class Origen
 
   def transform (*lista_metodos, &bloque)
     lista_metodos.each do |un_metodo|
-      self.metodo_a_transformar = un_metodo
-      puts metodo_a_transformar
-      self.instance_eval &bloque
-    end
-  end
-
-  def clase_origen
-    if (@origen.is_a?(Class) or @origen.is_a?(Module))
-      return @origen
-    else
-      return @origen.singleton_class
+      Transformacion.new(un_metodo).instance_eval &bloque
     end
   end
 
