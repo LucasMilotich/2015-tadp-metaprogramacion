@@ -18,7 +18,7 @@ class Transformacion
 
   def redirect_to(objetonuevo)
     modificar do
-      |*args| objetonuevo.method(@metodo.name).call(args)
+    |*args| objetonuevo.method(metodo.name).call(args)
     end
   end
 
@@ -27,13 +27,14 @@ class Transformacion
   end
 
   def after (&bloque)
-
+    modificar do
+      self.method(self.metodo.name).call(args)
+      bloque
+    end
   end
 
   def instead_of (&bloque)
-    modificar do
-      bloque
-    end
+    modificar &bloque
   end
 
   def clase_metodo

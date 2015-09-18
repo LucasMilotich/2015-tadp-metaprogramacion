@@ -46,5 +46,20 @@ describe 'Transformaciones' do
     expect(obj_cl2.saludar("Gil")).to eq("Chau Gil")
   end
 
+  it 'instead of con objeto' do
+    obj_cl4 = CL4.new
+    m3_cl4 = obj_cl4.method(:m3)
+    Transformacion.new(m3_cl4).instead_of do
+      |instance, *args| @x = 123
+    end
+    expect(obj_cl4.m3(10)).to eq(123)
+  end
 
+  it 'instead of con clase' do
+    m3_cl4 = CL4.instance_method(:m3)
+    Transformacion.new(m3_cl4).instead_of do
+      |instance, *args| @x = 123
+    end
+    expect(CL4.new.m3(10)).to eq(123)
+  end
 end
