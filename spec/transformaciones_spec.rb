@@ -5,11 +5,11 @@ describe 'Transformaciones' do
 
   class CL1
     def hace_algo(p1, p2)
-      p1 + ' - ' +p2
+      p1 + '-' +p2
     end
 
     def otro(p2, ppp)
-      p2 + ': ' +ppp
+      p2 + ':' +ppp
     end
   end
 
@@ -114,6 +114,23 @@ describe 'Transformaciones' do
     expect(otro_obj.m2(200)).to eq(400)
   end
 
+  it 'inject valor normal en clase' do
+    un_obj = CL1.new
+    algo_meth = CL1.instance_method(:hace_algo)
+    Transformacion.new(algo_meth).inject(p2: 'bar')
+    expect(un_obj.hace_algo("foo")).to eq("foo-bar")
+    expect(un_obj.hace_algo("foo","foo")).to eq("foo-bar")
 
+    otro_obj = CL1.new
+    expect(otro_obj.hace_algo("foo")).to eq("foo-bar")
+    expect(otro_obj.hace_algo("foo","foo")).to eq("foo-bar")
+  end
+
+  it 'inject proc' do
+    un_obj = CL1.new
+    algo_meth = CL1.instance_method(:hace_algo)
+    Transformacion.new(algo_meth).inject(p2: proc{|receptor, mensaje, arg_anterior| "bar(#{mensaje}->#{arg_anterior})"})
+    expect(un_obj.hace_algo("foo","foo")).to eq("foo-bar(hace_algo->foo")
+  end
 
 end
