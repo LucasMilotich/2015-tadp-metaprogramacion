@@ -83,10 +83,10 @@ describe 'Transformaciones' do
 
   it 'before en clase' do
     m1_cl4 = CL4.instance_method :m1
-    Transformacion.new(m1_cl4).before do |instance, cont, *args|
+    Transformacion.new(m1_cl4).before do |instance, contexto, *args|
       @x = 10
       new_args = args.map{ |arg| arg * 10 }
-      cont.call(self, nil, *new_args)
+      contexto.call(self, nil, *new_args)
     end
     un_obj = CL4.new
     otro_obj = CL4.new
