@@ -12,6 +12,7 @@ class Transformacion
   end
 
 
+
   def inject(hash)
 
 
@@ -44,6 +45,7 @@ class Transformacion
     _clonedMethod.call()
     }
 
+
   end
 
   def redirect_to(objetonuevo)
@@ -54,18 +56,19 @@ class Transformacion
   end
 
   def before (&bloque)
-    siguiente = self.metodo.name
-    modificar do |args|
-      bloque
-      self.method(siguiente).call(args)
+    old_method = unbind_if
+    modificar do |*args|
+      self.instance_eval &bloque
+      old_method.bind(self).call *args, &bloque
     end
+
   end
 
-  def after (&bloque)
-    anterior = self.metodo.name
-    modificar do |args|
-      self.method(anterior).call(args)
-      bloque
+  def after(&bloque)
+    old_method = unbind_if
+    modificar do |*args|
+      old_method.bind(self).call *args
+      self.instance_eval &bloque
     end
   end
 
@@ -78,6 +81,14 @@ class Transformacion
       return metodo.receiver.singleton_class
     else
       return metodo.owner
+    end
+  end
+
+  def unbind_if
+    if self.metodo.is_a?(Method)
+      return self.metodo.unbind
+    else
+      return self.metodo
     end
   end
 
