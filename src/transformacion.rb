@@ -12,7 +12,37 @@ class Transformacion
   end
 
 
-  def inject(&bloque)
+  def inject(hash)
+
+
+    _clonedMethod = self.metodo.clone
+    _owner = self.metodo.owner
+    _parametersMethod = self.metodo.paramers.map { |arg| arg[1].to_s }
+    
+
+
+
+
+    _owner.send(:define_method,self.metodo.name) {
+
+    #una vez filtrado los parametros a utilizar, agregarlos a call
+
+=begin
+      => :hola
+      [49] pry(main)> send(:define_method,:hola) do
+        [49] pry(main)*   |arg1,arg2|
+            [49] pry(main)*   arg1= 2
+        [49] pry(main)*   metodoCopia.call(arg1,arg2)
+        [49] pry(main)* end
+      => :hola
+      [50] pry(main)> method(:hola).call(1,2)
+      2
+      2
+      =>
+=end
+
+    _clonedMethod.call()
+    }
 
   end
 
