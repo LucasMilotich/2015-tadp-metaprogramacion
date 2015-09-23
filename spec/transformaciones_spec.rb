@@ -86,7 +86,8 @@ describe 'Transformaciones' do
     Transformacion.new(m1_cl4).before do |instance, contexto, *args|
       @x = 10
       new_args = args.map{ |arg| arg * 10 }
-      contexto.call(self, nil, *new_args)
+      #contexto.call(self,nil, *new_args)
+      contexto.call(*new_args)
     end
     un_obj = CL4.new
     otro_obj = CL4.new
