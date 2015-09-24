@@ -20,14 +20,16 @@ class Transformacion
     _metodo_a_llamar = _duenio.is_a?(Class) ? :define_method : :define_singleton_method
      _nombre = self.metodo.name
 
-      if !_clase.instance_methods().include?(:original)
-        _clase.class_exec{alias_method :original, _nombre}
+     _metodoOriginal = ("original" + _nombre.to_s).to_sym
+
+      if !_clase.instance_methods().include?(_metodoOriginal)
+        _clase.class_exec{alias_method _metodoOriginal, _nombre}
       end
 
     _duenio.send(_metodo_a_llamar,self.metodo.name) {
         |*args|
 
-      _parametersMethod = method(:original).parameters.map{|x| x[1] }
+      _parametersMethod = method(_metodoOriginal).parameters.map{|x| x[1] }
       _parametersMethod.select { |param|
 
        if hash[param] != nil
@@ -36,7 +38,7 @@ class Transformacion
        end
                             }
 
-      _duenio.is_a?(Class) ? _duenio.instance_method(:original).bind(self).call(*args) : _duenio.send(:original,*args)
+      _duenio.is_a?(Class) ? _duenio.instance_method(_metodoOriginal).bind(self).call(*args) : _duenio.send(_metodoOriginal,*args)
 
 
       #_meth =  _clonedMethod

@@ -28,7 +28,7 @@ class Origen
     lista_origenes.any? { |org| org.origen.class == self.class }
   end
 
-  def transform (*lista_metodos, &bloque)
+  def transform (lista_metodos, &bloque)
     lista_metodos.each do |un_metodo|
       Transformacion.new(un_metodo).instance_eval &bloque
     end

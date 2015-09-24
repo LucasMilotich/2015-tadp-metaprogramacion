@@ -153,7 +153,9 @@ describe 'Transformaciones' do
     algo_meth = CL1.instance_method(:hace_algo)
     Transformacion.new(algo_meth).inject(p2: proc{|receptor, mensaje, arg_anterior| "bar(#{mensaje}->#{arg_anterior})"} )
     expect(un_obj.hace_algo("foo","foo")).to eq("foo-bar(hace_algo->foo)")
+
   end
+
 
 
 
