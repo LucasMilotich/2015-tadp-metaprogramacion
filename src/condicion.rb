@@ -1,3 +1,4 @@
+
 module CondicionRegex
   def cumple_regex?(objeto, regex)
     #proc{|un_metodo|}

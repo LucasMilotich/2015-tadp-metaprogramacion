@@ -17,33 +17,38 @@ class Transformacion
 
 
     _clonedMethod = self.metodo.clone
-    _owner = self.metodo.owner
-    _parametersMethod = self.metodo.paramers.map { |arg| arg[1].to_s }
-    
+    _parametersMethod = _clonedMethod.parameters.map { |x| x[1] }
+    _duenio = get_duenio(@metodo)
+    _metodo_a_llamar = _duenio.is_a?(Class) ? :define_method : :define_singleton_method
+
+    _duenio.send(_metodo_a_llamar,self.metodo.name) {
+        |*args|
+
+      _parametersMethod.each { |param|
+
+       if hash[param] != nil
+         _n = _parametersMethod.index(param)
+         args[_n] = hash[param].is_a?(Proc) ? hash[param].call(_duenio,_clonedMethod.name.to_s,args[_n-1]) : hash[param]
+       end
+                            }
+
+      _duenio.is_a?(Class) ? _clonedMethod.bind(self).call(*args) : _clonedMethod.call(*args)
 
 
+      #_meth =  _clonedMethod
+      #_meth.call(*args)
 
-
-    _owner.send(:define_method,self.metodo.name) {
-
-    #una vez filtrado los parametros a utilizar, agregarlos a call
-
-=begin
-      => :hola
-      [49] pry(main)> send(:define_method,:hola) do
-        [49] pry(main)*   |arg1,arg2|
-            [49] pry(main)*   arg1= 2
-        [49] pry(main)*   metodoCopia.call(arg1,arg2)
-        [49] pry(main)* end
-      => :hola
-      [50] pry(main)> method(:hola).call(1,2)
-      2
-      2
-      =>
-=end
-
-    _clonedMethod.call()
     }
+
+
+  end
+
+  def get_duenio(metodo)
+    begin
+      metodo.receiver
+    rescue
+      metodo.owner
+    end
 
 
   end

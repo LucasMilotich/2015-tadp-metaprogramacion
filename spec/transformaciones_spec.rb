@@ -38,7 +38,7 @@ describe 'Transformaciones' do
     end
   end
 
-  #En todos los tests se evalúa con dos objetos generados por la misma clase.
+  #En todos los tests se evalï¿½a con dos objetos generados por la misma clase.
   #En unos se verifican que el cambio se aplique en ambos, y en otros en uno solo.
 
   it 'redirect_to en objeto' do
@@ -117,7 +117,7 @@ describe 'Transformaciones' do
   it 'inject valor normal en clase' do
     un_obj = CL1.new
     algo_meth = CL1.instance_method(:hace_algo)
-    Transformacion.new(algo_meth).inject(p2: 'bar')
+    Transformacion.new(algo_meth).inject(p2: "bar")
     expect(un_obj.hace_algo("foo")).to eq("foo-bar")
     expect(un_obj.hace_algo("foo","foo")).to eq("foo-bar")
 
@@ -125,12 +125,35 @@ describe 'Transformaciones' do
     expect(otro_obj.hace_algo("foo")).to eq("foo-bar")
     expect(otro_obj.hace_algo("foo","foo")).to eq("foo-bar")
   end
+  it 'inject valor normal en clase pepe' do
+    un_obj = CL1.new
+    algo_meth = CL1.instance_method(:hace_algo)
+    Transformacion.new(algo_meth).inject(p2: "pepe")
+    expect(un_obj.hace_algo("foo")).to eq("foo-bar")
+    expect(un_obj.hace_algo("foo","foo")).to eq("foo-pepe")
+
+    otro_obj = CL1.new
+    expect(otro_obj.hace_algo("foo")).to eq("foo-bar")
+    expect(otro_obj.hace_algo("foo","foo")).to eq("foo-bar")
+  end
+
+
+  it 'inject valor normal en instancia' do
+  un_obj = CL1.new
+  algo_meth = un_obj.method(:hace_algo)
+  Transformacion.new(algo_meth).inject(p2: "bar")
+  expect(un_obj.hace_algo("foo")).to eq("foo-bar")
+  expect(un_obj.hace_algo("foo","foo")).to eq("foo-bar")
+  end
 
   it 'inject proc' do
     un_obj = CL1.new
     algo_meth = CL1.instance_method(:hace_algo)
-    Transformacion.new(algo_meth).inject(p2: proc{|receptor, mensaje, arg_anterior| "bar(#{mensaje}->#{arg_anterior})"})
-    expect(un_obj.hace_algo("foo","foo")).to eq("foo-bar(hace_algo->foo")
+    Transformacion.new(algo_meth).inject(p2: proc{|receptor, mensaje, arg_anterior| "bar(#{mensaje}->#{arg_anterior})"} )
+    expect(un_obj.hace_algo("foo","foo")).to eq("foo-bar(hace_algo->foo)")
   end
+
+
+
 
 end
