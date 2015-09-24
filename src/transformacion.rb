@@ -63,8 +63,11 @@ class Transformacion
   def before (&bloque)
     old_method = unbind_if
     modificar do |*args|
-      self.instance_eval &bloque
-      old_method.bind(self).call *args, &bloque
+      self.instance_exec(self,old_method.bind(self),*args, &bloque)
+      #old_method.bind(self).call *args
+      #bloque.call(self,old_method.bind(self),args)
+      #old_method.call *args
+
     end
 
   end
