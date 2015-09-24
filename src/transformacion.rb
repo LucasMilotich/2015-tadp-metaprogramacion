@@ -15,24 +15,28 @@ class Transformacion
 
   def inject(hash)
 
-
-    _clonedMethod = self.metodo.clone
-    _parametersMethod = _clonedMethod.parameters.map { |x| x[1] }
     _duenio = get_duenio(@metodo)
+    _clase = self.obtenerClase(_duenio)
     _metodo_a_llamar = _duenio.is_a?(Class) ? :define_method : :define_singleton_method
+     _nombre = self.metodo.name
+
+      if !_clase.instance_methods().include?(:original)
+        _clase.class_exec{alias_method :original, _nombre}
+      end
 
     _duenio.send(_metodo_a_llamar,self.metodo.name) {
         |*args|
 
-      _parametersMethod.each { |param|
+      _parametersMethod = method(:original).parameters.map{|x| x[1] }
+      _parametersMethod.select { |param|
 
        if hash[param] != nil
          _n = _parametersMethod.index(param)
-         args[_n] = hash[param].is_a?(Proc) ? hash[param].call(_duenio,_clonedMethod.name.to_s,args[_n-1]) : hash[param]
+         args[_n] = hash[param].is_a?(Proc) ? hash[param].call(_duenio,__method__,args[_n-1]) : hash[param]
        end
                             }
 
-      _duenio.is_a?(Class) ? _clonedMethod.bind(self).call(*args) : _clonedMethod.call(*args)
+      _duenio.is_a?(Class) ? _duenio.instance_method(:original).bind(self).call(*args) : _duenio.send(:original,*args)
 
 
       #_meth =  _clonedMethod
@@ -42,7 +46,9 @@ class Transformacion
 
 
   end
-
+  def obtenerClase(duenio)
+    duenio.is_a?(Class) ? duenio : duenio.class
+  end
   def get_duenio(metodo)
     begin
       metodo.receiver

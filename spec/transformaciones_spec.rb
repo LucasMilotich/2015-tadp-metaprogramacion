@@ -126,16 +126,16 @@ describe 'Transformaciones' do
     expect(otro_obj.hace_algo("foo")).to eq("foo-bar")
     expect(otro_obj.hace_algo("foo","foo")).to eq("foo-bar")
   end
-  it 'inject valor normal en clase pepe' do
+  it 'inject valor normal en clase - pepe' do
     un_obj = CL1.new
     algo_meth = CL1.instance_method(:hace_algo)
     Transformacion.new(algo_meth).inject(p2: "pepe")
-    expect(un_obj.hace_algo("foo")).to eq("foo-bar")
+    expect(un_obj.hace_algo("foo")).to eq("foo-pepe")
     expect(un_obj.hace_algo("foo","foo")).to eq("foo-pepe")
 
     otro_obj = CL1.new
-    expect(otro_obj.hace_algo("foo")).to eq("foo-bar")
-    expect(otro_obj.hace_algo("foo","foo")).to eq("foo-bar")
+    expect(otro_obj.hace_algo("foo")).to eq("foo-pepe")
+    expect(otro_obj.hace_algo("foo","foo")).to eq("foo-pepe")
   end
 
 
