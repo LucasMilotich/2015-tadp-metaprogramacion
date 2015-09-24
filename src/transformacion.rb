@@ -68,12 +68,9 @@ class Transformacion
 
   def before (&bloque)
     old_method = unbind_if
+    proc_contexto = proc{|instance,contexto,*args| old_method.bind(instance).call *args}
     modificar do |*args|
-      self.instance_exec(self,old_method.bind(self),*args, &bloque)
-      #old_method.bind(self).call *args
-      #bloque.call(self,old_method.bind(self),args)
-      #old_method.call *args
-
+      self.instance_exec(self,proc_contexto,*args, &bloque)
     end
 
   end

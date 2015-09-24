@@ -38,7 +38,7 @@ describe 'Transformaciones' do
     end
   end
 
-  #En todos los tests se eval�a con dos objetos generados por la misma clase.
+  #En todos los tests se evalua con dos objetos generados por la misma clase.
   #En unos se verifican que el cambio se aplique en ambos, y en otros en uno solo.
 
   it 'redirect_to en objeto' do
@@ -86,8 +86,7 @@ describe 'Transformaciones' do
     Transformacion.new(m1_cl4).before do |instance, contexto, *args|
       @x = 10
       new_args = args.map{ |arg| arg * 10 }
-      #contexto.call(self,nil, *new_args)
-      contexto.call(*new_args)
+      contexto.call(self,nil, *new_args)
     end
     un_obj = CL4.new
     otro_obj = CL4.new
@@ -115,6 +114,17 @@ describe 'Transformaciones' do
     expect(otro_obj.m2(200)).to eq(400)
   end
 
+  it 'inject valor normal en instancia' do
+    un_obj = CL1.new
+    algo_meth = un_obj.method(:hace_algo)
+    Transformacion.new(algo_meth).inject(p2: "jose")
+    expect(un_obj.hace_algo("foo")).to eq("foo-jose")
+    expect(un_obj.hace_algo("foo","foo")).to eq("foo-jose")
+
+    otro_obj = CL1.new
+    expect(otro_obj.hace_algo("foo","foo")).to eq("foo-foo")
+  end
+
   it 'inject valor normal en clase' do
     un_obj = CL1.new
     algo_meth = CL1.instance_method(:hace_algo)
@@ -136,15 +146,6 @@ describe 'Transformaciones' do
     otro_obj = CL1.new
     expect(otro_obj.hace_algo("foo")).to eq("foo-pepe")
     expect(otro_obj.hace_algo("foo","foo")).to eq("foo-pepe")
-  end
-
-
-  it 'inject valor normal en instancia' do
-  un_obj = CL1.new
-  algo_meth = un_obj.method(:hace_algo)
-  Transformacion.new(algo_meth).inject(p2: "bar")
-  expect(un_obj.hace_algo("foo")).to eq("foo-bar")
-  expect(un_obj.hace_algo("foo","foo")).to eq("foo-bar")
   end
 
   it 'inject proc' do
