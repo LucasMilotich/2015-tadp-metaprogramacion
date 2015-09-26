@@ -26,20 +26,20 @@ describe 'Aspects_test' do
   end
 
   it 'completo con inyeccion de proc' do
-    class MiClase
+    class MiClase1
       def hace_algo(p1, p2)
         p1 + "-" + p2
       end
     end
 
-    Aspects.on MiClase do
+    Aspects.on MiClase1 do
       transform(where has_parameters(1, /p2/)) do
         inject(p2: proc{ |receptor, mensaje, arg_anterior|
                  "bar(#{mensaje}->#{arg_anterior})" })
       end
     end
 
-    expect(MiClase.new.hace_algo('foo', 'foo')).to eq('foo-bar(hace_algo->foo)')
+    expect(MiClase1.new.hace_algo('foo', 'foo')).to eq('foo-bar(hace_algo->foo)')
   end
 
   it 'completo con redireccion' do
